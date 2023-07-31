@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Primary
 
 @SpringBootTest
 @Import(CaffeineCacheConfiguration::class)
-class PersonServiceTest {
+class PersonServiceCaffeineCacheTest {
 
     @Autowired
     private lateinit var service: PersonService
@@ -36,8 +36,8 @@ class PersonServiceTest {
 
         val caffeineCache = cache?.nativeCache as Cache<*, *>
 
-        Assertions.assertEquals(caffeineCache.asMap().size, 2)
         println("Stats: ${caffeineCache.stats()}")
+        Assertions.assertEquals(caffeineCache.asMap().size, 2)
     }
 }
 
