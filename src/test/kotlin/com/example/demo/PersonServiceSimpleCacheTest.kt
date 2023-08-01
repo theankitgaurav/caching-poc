@@ -1,12 +1,17 @@
 package com.example.demo
 
-import com.github.benmanes.caffeine.cache.Cache
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.cache.CacheManager
-import org.springframework.cache.concurrent.ConcurrentMapCache
+import org.springframework.cache.annotation.EnableCaching
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Primary
 import java.util.concurrent.ConcurrentMap
 
 @SpringBootTest
@@ -30,7 +35,6 @@ class PersonServiceSimpleCacheTest {
         val simpleCache = cache?.nativeCache as ConcurrentMap<*, *>
 
         println("Stats: ${simpleCache.entries}")
-        Assertions.assertEquals(simpleCache.entries.size, 2)
+        Assertions.assertEquals(simpleCache.entries.size, 3, "Cache eviction not possible")
     }
 }
-

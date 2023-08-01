@@ -1,9 +1,13 @@
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        cache: trace
+logging:
+  level:
+    org:
+      springframework:
+        cache: trace
 spring:
   redis:
     host: localhost
     port: 6379
+    database: 0
+  cache:
+    redis:
+      enable-statistics: true

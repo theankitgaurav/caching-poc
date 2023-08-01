@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 
-
 @SpringBootTest
 @Import(CaffeineCacheConfiguration::class)
 class PersonServiceCaffeineCacheTest {
@@ -27,8 +26,11 @@ class PersonServiceCaffeineCacheTest {
 
     @Test
     fun `cache should not hold more than max weight in bytes`() {
-        service.fetch("person1")
+        service.fetch("person1") // frequency: 0
+        service.fetch("person1") // frequency: 1 - hit
         service.fetch("person2")
+        service.fetch("person3")
+        service.fetch("person3")
         service.fetch("person3")
 
         val cache = cacheManager.getCache("personCache")
@@ -37,7 +39,8 @@ class PersonServiceCaffeineCacheTest {
         val caffeineCache = cache?.nativeCache as Cache<*, *>
 
         println("Stats: ${caffeineCache.stats()}")
-        Assertions.assertEquals(caffeineCache.asMap().size, 2)
+        println("Cache: ${caffeineCache.asMap()}")
+        Assertions.assertEquals(2, caffeineCache.asMap().size)
     }
 }
 
@@ -47,7 +50,7 @@ class CaffeineCacheConfiguration {
     @Bean
     fun caffeineConfig(): Caffeine<*, *> {
         return Caffeine.newBuilder()
-            .maximumWeight(20)
+            .maximumWeight(20) // How to come up with this number for prod??
             .evictionListener { key: Any?, _: Any?, cause -> println("Evicted key $key due to $cause") }
 //            .weigher { _: Any, v: Any -> v.toByteArray().size }
             .weigher { _: Any, _: Any -> 10 }
