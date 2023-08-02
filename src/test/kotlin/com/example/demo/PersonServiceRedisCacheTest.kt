@@ -65,7 +65,7 @@ class RedisCacheConfig {
     fun cacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
         val connection = redisConnectionFactory.connection
         connection.setConfig("maxmemory-policy", "allkeys-lfu")
-        connection.setConfig("maxmemory", "1m")
+        connection.setConfig("maxmemory", "2m")
         val cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .entryTtl(Duration.ofMinutes(5))
         return RedisCacheManager.builder(redisConnectionFactory)
